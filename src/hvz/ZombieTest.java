@@ -26,9 +26,9 @@ public class ZombieTest {
 		game.insert(a, big(0), big(0));
 		game.insert(b, big(100), big(100));
 		game.insert(c, big(-1000), big(-1000));
-		assertTrue(game.zombie(big(0),big(0))==a);
-		assertTrue(game.zombie(big(100),big(100))==b);
-		assertTrue(game.zombie(big(-1000),big(-1000))==c);
+		assertTrue("Can find the added Zombie", game.zombie(big(0),big(0))==a);
+		assertTrue("Can find the added Zombie", game.zombie(big(100),big(100))==b);
+		assertTrue("Can find the added Zombie", game.zombie(big(-1000),big(-1000))==c);
 	}
 	
 	//there are no boundaries to test with zombie()
@@ -38,7 +38,7 @@ public class ZombieTest {
 		game.insert(null, big(0), big(0));
 		game.zombie(big(0), big(0));
 		//null should not be allowed in table to begin with, so throws error
-		fail();
+		fail("should have thrown an error when trying to find null");
 	}
 	
 	@Test
@@ -46,8 +46,8 @@ public class ZombieTest {
 		//covers good data and structural basis
 		game.insert(a, big(0), big(0));
 		game.insert(b, big(1), big(1));
-		assertTrue(game.zombie(big(0),big(0))==a);
-		assertTrue(game.zombie(big(1),big(1))==b);
+		assertTrue("Can add a zombie", game.zombie(big(0),big(0))==a);
+		assertTrue("Can add a zombie",game.zombie(big(1),big(1))==b);
 	}
 	
 	@Test(expected = IllegalArgumentException.class)
@@ -55,14 +55,14 @@ public class ZombieTest {
 		//covers bad data and structural basis
 		game.insert(a, big(0), big(0));
 		game.insert(b, big(0), big(0));
-		fail();
+		fail("Should have thrown error when trying to add a zombie where there already is one");
 	}
 	
 	@Test(expected = NullPointerException.class)
 	public void testInsertNull(){
 		//covers bad data and structural basis
 		game.insert(null, big(0), big(0));
-		fail();
+		fail("Should have thrown error when inserting null");
 	}
 	
 	//No boundaries can be tested in insert()
@@ -71,15 +71,15 @@ public class ZombieTest {
 	public void testDeleteNominal() {
 		//covers structural basis and good data
 		game.insert(a, big(0), big(0));
-		assertTrue(game.delete(big(0),big(0))==a);
-		assertTrue(game.zombie(big(0),big(0))==null);
+		assertTrue("Can delete zombie", game.delete(big(0),big(0))==a);
+		assertTrue("Deleted zombie is gone", game.zombie(big(0),big(0))==null);
 	}
 	
 	@Test(expected = IllegalArgumentException.class)
 	public void testDeleteNonExisting(){
 		game.insert(a, big(0), big(0));
 		game.delete(big(1), big(0));
-		fail();
+		fail("Should have deleted non-existant zombie");
 	}
 	
 	//no boundaries can be tested in delete()
@@ -92,8 +92,8 @@ public class ZombieTest {
 		game.insert(c, big(-1), big(0));
 		ZombiePoint p1 = game.javelin(big(1));
 		ZombiePoint p2 = game.javelin(big(-1000));
-		assertTrue(game.zombie(p1.getX(), p1.getY())==a);
-		assertTrue(game.zombie(p2.getX(), p2.getY())==c);
+		assertTrue("Gets closest zombie to left", game.zombie(p1.getX(), p1.getY())==a);
+		assertTrue("Gets closest zombie to right", game.zombie(p2.getX(), p2.getY())==c);
 	}
 	
 	@Test
@@ -103,14 +103,14 @@ public class ZombieTest {
 		game.insert(b, big(5), big(0));
 		ZombiePoint p1 = game.javelin(big(-100));
 		ZombiePoint p2 = game.javelin(big(100));
-		assertTrue(game.zombie(p1.getX(), p1.getY())==a);
-		assertTrue(game.zombie(p2.getX(), p2.getY())==b);
+		assertTrue("Gets closest zombie to right in one direction", game.zombie(p1.getX(), p1.getY())==a);
+		assertTrue("Gets closest zombie to left in one direction", game.zombie(p2.getX(), p2.getY())==b);
 	}
 
 	@Test
 	public void testJavelinNoZombies() {
 		//covers rest of structural basis and bad data
-		assertTrue(game.javelin(big(0))==null);
+		assertTrue("with no zombies, returns null", game.javelin(big(0))==null);
 	}
 	
 	@Test
@@ -118,10 +118,11 @@ public class ZombieTest {
 		game.insert(a, big(0), big(0));
 		game.insert(b, big(2), big(0));
 		ZombiePoint p1 = game.javelin(big(0));
-		assertTrue(game.zombie(p1.getX(), p1.getY())==a); //on top a zombie should return that zombie
+		assertTrue("On top of a zombie should return that zombie", game.zombie(p1.getX(), p1.getY())==a); 
 		
-		ZombiePoint p2 = game.javelin(big(1)); //right in between zombies should return either zombie
-		assertTrue(game.zombie(p2.getX(), p2.getY())==a || game.zombie(p2.getX(), p2.getY())==b);
+		ZombiePoint p2 = game.javelin(big(1)); 
+		assertTrue("Right in between zombies should return either zombie",
+				game.zombie(p2.getX(), p2.getY())==a || game.zombie(p2.getX(), p2.getY())==b);
 	}
 	
 	@Test(expected = NullPointerException.class)
@@ -129,7 +130,7 @@ public class ZombieTest {
 		//covers bad data and structural basis
 		game.insert(a, big(0), big(0));
 		game.javelin(null);
-		fail();
+		fail("Should have thrown an error for a null arguement");
 	}
 	
 	@Test
@@ -137,10 +138,11 @@ public class ZombieTest {
 		//covers good data and structural basis
 		game.insert(a, big(0), big(0));
 		game.insert(b, big(100), big(0));
+		game.insert(c, big(50), big(0));
 		ZombiePoint p1 = game.arrow("left");
 		ZombiePoint p2 = game.arrow("right");
-		assertTrue(game.zombie(p1.getX(), p1.getY())==a);
-		assertTrue(game.zombie(p2.getX(), p2.getY())==b);
+		assertTrue("Arrow finds furthest left", game.zombie(p1.getX(), p1.getY())==a);
+		assertTrue("Arrow finds furthest right", game.zombie(p2.getX(), p2.getY())==b);
 	}
 	
 	@Test(expected = IllegalArgumentException.class)
@@ -149,7 +151,7 @@ public class ZombieTest {
 		game.insert(a, big(0), big(0));
 		game.insert(b, big(100), big(0));
 		game.arrow("test");
-		fail();
+		fail("Should throw an error for an invalid input");
 	}
 	
 	@Test(expected = NullPointerException.class)
@@ -158,7 +160,7 @@ public class ZombieTest {
 		game.insert(a, big(0), big(0));
 		game.insert(b, big(100), big(0));
 		game.arrow(null);
-		fail();
+		fail("Should throw an error for no input");
 	}
 	
 	@Test
