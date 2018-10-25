@@ -4,63 +4,87 @@ import java.awt.geom.Point2D;
 import java.math.BigInteger;
 
 import org.junit.Test;
+import org.junit.Before;
 
 public class ZombieTest {
-
-	@Test
-	public void testZombieInsertDelete() {
-		Zombie a = new Zombie("a");
-		Zombie b = new Zombie("b");
-		HvZ game = new HvZ();
-		game.insert(a, new BigInteger("54"), new BigInteger("126"));
-		game.insert(b, new BigInteger("55"), new BigInteger("123"));
-		assertTrue(game.zombie(new BigInteger("1"), new BigInteger("12")) == null);
-		assertTrue(game.zombie(new BigInteger("54"), new BigInteger("126")).equals(a));
-		assertTrue(game.zombie(new BigInteger("55"), new BigInteger("123")).equals(b));
-		
-		assertTrue(game.delete(new BigInteger("54"), new BigInteger("126")).equals(a));
-		assertTrue(game.zombie(new BigInteger("54"), new BigInteger("126"))==null);
-		assertTrue(game.delete(new BigInteger("55"), new BigInteger("123")).equals(b));
-		assertTrue(game.zombie(new BigInteger("55"), new BigInteger("123"))==null);
+	HvZ game;
+	Zombie a;
+	Zombie b;
+	Zombie c;
+	
+	@Before
+	public void initialize(){
+		game = new HvZ();
+		a = new Zombie("a");
+		b = new Zombie("b");
+		c = new Zombie("c");
 	}
 	
 	@Test
-	public void testJavelin(){
-		Zombie a = new Zombie("a");
-		Zombie b = new Zombie("b");
-		HvZ game = new HvZ();
-		game.insert(a, new BigInteger("23"), new BigInteger("34"));
-		game.insert(b,new BigInteger("75"), new BigInteger("111"));
-		ZombiePoint pointA = game.javelin(new BigInteger("40"));
-		ZombiePoint pointB = game.javelin(new BigInteger("50"));
-		assertTrue(game.zombie(pointA.getX(),pointA.getY()).equals(a));
-		assertTrue(game.zombie(pointB.getX(),pointB.getY()).equals(b));
+	public void testZombieNominal(){
+		//covers structured basis and good data
+		game.insert(a, big(0), big(0));
+		game.insert(b, big(100), big(100));
+		game.insert(c, big(-1000), big(-1000));
+		assertTrue(game.zombie(big(0),big(0))==a);
+		assertTrue(game.zombie(big(100),big(100))==b);
+		assertTrue(game.zombie(big(-1000),big(-1000))==c);
+	}
+	
+	//there are no boundaries to test with zombie()
+	
+	@Test(expected = NullPointerException.class)
+	public void testZombieNull(){
+		game.insert(null, big(0), big(0));
+		game.zombie(big(0), big(0));
+		//null should not be allowed in table to begin with, so throws error
+		fail();
 	}
 	
 	@Test
-	public void testArrow(){
-		Zombie a = new Zombie("a");
-		Zombie b = new Zombie("b");
-		HvZ game = new HvZ();
-		game.insert(a, new BigInteger("20"), new BigInteger("34"));
-		game.insert(b, new BigInteger("28"), new BigInteger("34"));
-		ZombiePoint pointA = game.arrow("left");
-		ZombiePoint pointB = game.arrow("right");
-		assertTrue(game.zombie(pointA.getX(),pointA.getY()).equals(a));
-		assertTrue(game.zombie(pointB.getX(),pointB.getY()).equals(b));
+	public void testInsertNominal(){
+		//covers good data and structural basis
+		game.insert(a, big(0), big(0));
+		game.insert(b, big(1), big(1));
+		assertTrue(game.zombie(big(0),big(0))==a);
+		assertTrue(game.zombie(big(1),big(1))==b);
 	}
 	
-	@Test
-	public void testBomb(){
-		Zombie a = new Zombie("a");
-		Zombie b = new Zombie("b");
-		Zombie c = new Zombie("c");
-		HvZ game = new HvZ();
-		game.insert(a, new BigInteger("34"), new BigInteger("100"));
-		game.insert(b, new BigInteger("38"), new BigInteger("90"));
-		game.insert(c, new BigInteger("36"), new BigInteger("80"));
-		ZombiePoint point = game.bomb(new BigInteger("37"), new BigInteger("2"));
-		assertTrue(game.zombie(point.getX(),point.getY()).equals(b));
+	@Test(expected = IllegalArgumentException.class)
+	public void testInsertOnExisting(){
+		//covers bad data and structural basis
+		game.insert(a, big(0), big(0));
+		game.insert(b, big(0), big(0));
+		fail();
 	}
-
+	
+	@Test(expected = NullPointerException.class)
+	public void testInsertNull(){
+		//covers bad data and structural basis
+		game.insert(null, big(0), big(0));
+		fail();
+	}
+	
+	//No boundaries can be tested in insert()
+	
+	@Test
+	public void testDeleteNominal() {
+		//covers structural basis and good data
+		game.insert(a, big(0), big(0));
+		assertTrue(game.delete(big(0),big(0))==a);
+		assertTrue(game.zombie(big(0),big(0))==null);
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void testDeleteNonExisting(){
+		game.insert(a, big(0), big(0));
+		game.delete(big(1), big(0));
+		fail();
+	}
+	
+	//no boundaries can be tested in delete()
+	
+	public BigInteger big(int i){
+		return new BigInteger(""+i);
+	}
 }

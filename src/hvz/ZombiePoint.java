@@ -1,21 +1,28 @@
 import java.math.BigInteger;
+import java.util.Objects;
 
 class ZombiePoint implements Comparable<ZombiePoint>{
 	private BigInteger x;
 	private BigInteger y;
 	
 	public ZombiePoint(BigInteger x, BigInteger y){
+		Objects.requireNonNull(x);
+		Objects.requireNonNull(y);
 		this.x = x;
 		this.y = y;
 	}
 
-	
-	BigInteger getX() {
+	/**
+	 * @return the x coordinate of the point
+	 */
+	public final BigInteger getX() {
 		return x;
 	}
 
-
-	BigInteger getY() {
+	/**
+	 * @return the y coordinate of the point
+	 */
+	public final BigInteger getY() {
 		return y;
 	}
 
@@ -38,5 +45,4 @@ class ZombiePoint implements Comparable<ZombiePoint>{
 	static boolean higher(ZombiePoint a, ZombiePoint b){
 		return (a.getY().compareTo(b.getY()) > 0);
 	}
-	
 }

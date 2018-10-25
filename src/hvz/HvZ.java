@@ -1,9 +1,10 @@
 import java.math.BigInteger;
+import java.util.Objects;
 import java.util.Set;
 import java.util.TreeMap;
 
 public class HvZ {
-	TreeMap<ZombiePoint, Zombie> zombies;
+	private TreeMap<ZombiePoint, Zombie> zombies;
 	
 	public HvZ() {
 		zombies = new TreeMap<ZombiePoint, Zombie>();
@@ -22,10 +23,11 @@ public class HvZ {
 	 * It returns an error if a zombie is already present at (x, y) or if z is null.
 	 */
 	public void insert(Zombie z, BigInteger x, BigInteger y){
+		Objects.requireNonNull(z);		
 		ZombiePoint location = new ZombiePoint(x, y);
 		//if Zombie(x, y) doesn't equal null,return an error
 		if(zombies.get(location)!=null)
-			throw new IllegalArgumentException("There is already a zombie at the inputted values ");
+			throw new IllegalArgumentException("There is already a zombie at the inputted values.");
 		//else Call put on red-black tree for a key of (x, y) and a value of z
 		else
 			zombies.put(location, z);			
