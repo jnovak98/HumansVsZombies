@@ -42,9 +42,9 @@ public class ZombiePointTest {
 		ZombiePoint a = new ZombiePoint(big(0), big(0));
 		ZombiePoint b = new ZombiePoint(big(100), big(0));
 		assertTrue("closerTo works when the closer point is less",
-				ZombiePoint.testCloserTo(a, b, big(25))==a);
+				ZombiePoint.closerTo(a, b, big(25))==a);
 		assertTrue("closerTo works when the closer point is greater",
-				ZombiePoint.testCloserTo(a, b, big(75))==b);
+				ZombiePoint.closerTo(a, b, big(75))==b);
 	}
 	
 	@Test
@@ -53,7 +53,7 @@ public class ZombiePointTest {
 		ZombiePoint a = new ZombiePoint(big(0), big(0));
 		ZombiePoint b = new ZombiePoint(big(100), big(0));
 		assertTrue("closerTo returns one of the correct options when they are equidistant",
-				ZombiePoint.testCloserTo(a, b, big(50))==a ||ZombiePoint.testCloserTo(a, b, big(50))==b );
+				ZombiePoint.closerTo(a, b, big(50))==a ||ZombiePoint.closerTo(a, b, big(50))==b );
 	}
 	
 	@Test(expected = NullPointerException.class)
@@ -61,7 +61,7 @@ public class ZombiePointTest {
 		//covers bad data
 		ZombiePoint a = new ZombiePoint(big(0), big(0));
 		ZombiePoint b = new ZombiePoint(big(100), big(0));
-		ZombiePoint.testCloserTo(a, b, null);
+		ZombiePoint.closerTo(a, b, null);
 		fail("should have thrown an error for the null arguement");
 	}
 
@@ -71,17 +71,17 @@ public class ZombiePointTest {
 		ZombiePoint a = new ZombiePoint(big(0), big(0));
 		ZombiePoint b = new ZombiePoint(big(0), big(1));
 		assertTrue("returns true when the higher point is first",
-				ZombiePoint.testHigher(b,a));
+				ZombiePoint.higher(b,a));
 		ZombiePoint c = new ZombiePoint(big(1), big(0));
 		assertFalse("returns false if they are equal in height",
-				ZombiePoint.testHigher(a,c));
+				ZombiePoint.higher(a,c));
 	}	
 	
 	@Test(expected = NullPointerException.class)
 	public void testHigherNullArguements() {
 		//covers bad data
 		ZombiePoint a = new ZombiePoint(big(0), big(0));
-		ZombiePoint.testHigher(a,null);
+		ZombiePoint.higher(a,null);
 		fail("should have thrown an error for the null arguement");
 	}
 	

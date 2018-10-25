@@ -45,18 +45,10 @@ public class ZombiePoint implements Comparable<ZombiePoint>{
 		return (closerValue < 0) ? a : b;
 	}
 	
-	public static ZombiePoint testCloserTo(ZombiePoint a, ZombiePoint b, BigInteger x){
-		return closerTo(a,b,x);
-	}
-	
 	//helper function which returns whether the first ZombiePoint is bigger than the second
 	static boolean higher(ZombiePoint a, ZombiePoint b){
 		Objects.requireNonNull(a);
 		Objects.requireNonNull(b);
 		return (a.getY().compareTo(b.getY()) > 0);
-	}
-	
-	public static boolean testHigher(ZombiePoint a, ZombiePoint b){
-		return higher(a,b);
 	}
 }
