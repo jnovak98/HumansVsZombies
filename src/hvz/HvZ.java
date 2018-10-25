@@ -94,10 +94,12 @@ public class HvZ {
 	 * bomb kills the highest zombie whose horizontal coordinate is between xP-r and xP+r.
 	 */
 	public ZombiePoint bomb(BigInteger playerX, BigInteger range){
+		Objects.requireNonNull(playerX);
+		Objects.requireNonNull(range);
 		//call subtree function to get all keys greater than xP-r and less than xP+r in the tree.
 		//Convert subtree to a set S than can be iterated through
 		Set<ZombiePoint> zombiesInRange = zombies.subMap(new ZombiePoint(playerX.subtract(range),BigInteger.ZERO), 
-				new ZombiePoint(playerX.add(range),BigInteger.ZERO)).keySet();
+				new ZombiePoint(playerX.add(range.add(BigInteger.ONE)),BigInteger.ZERO)).keySet();
 		//H<-null
 		ZombiePoint highest = null;
 		//for each key K in S
