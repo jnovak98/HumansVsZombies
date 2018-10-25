@@ -84,6 +84,91 @@ public class ZombieTest {
 	
 	//no boundaries can be tested in delete()
 	
+	@Test
+	public void testJavelinNominal() {
+		//covers some of structural basis and good data
+		game.insert(a, big(0), big(0));
+		game.insert(b, big(3), big(0));
+		game.insert(c, big(-1), big(0));
+		ZombiePoint p1 = game.javelin(big(1));
+		ZombiePoint p2 = game.javelin(big(-1000));
+		assertTrue(game.zombie(p1.getX(), p1.getY())==a);
+		assertTrue(game.zombie(p2.getX(), p2.getY())==c);
+	}
+	
+	@Test
+	public void testJavelinZombieInOneDirection() {
+		//covers other part of structural basis and good data
+		game.insert(a, big(0), big(0));
+		game.insert(b, big(5), big(0));
+		ZombiePoint p1 = game.javelin(big(-100));
+		ZombiePoint p2 = game.javelin(big(100));
+		assertTrue(game.zombie(p1.getX(), p1.getY())==a);
+		assertTrue(game.zombie(p2.getX(), p2.getY())==b);
+	}
+
+	@Test
+	public void testJavelinNoZombies() {
+		//covers rest of structural basis and bad data
+		assertTrue(game.javelin(big(0))==null);
+	}
+	
+	@Test
+	public void testJavelinBoundaries() {
+		game.insert(a, big(0), big(0));
+		game.insert(b, big(2), big(0));
+		ZombiePoint p1 = game.javelin(big(0));
+		assertTrue(game.zombie(p1.getX(), p1.getY())==a); //on top a zombie should return that zombie
+		
+		ZombiePoint p2 = game.javelin(big(1)); //right in between zombies should return either zombie
+		assertTrue(game.zombie(p2.getX(), p2.getY())==a || game.zombie(p2.getX(), p2.getY())==b);
+	}
+	
+	@Test(expected = NullPointerException.class)
+	public void testJavelinNull(){
+		//covers bad data and structural basis
+		game.insert(a, big(0), big(0));
+		game.javelin(null);
+		fail();
+	}
+	
+	@Test
+	public void testArrowNominal() {
+		//covers good data and structural basis
+		game.insert(a, big(0), big(0));
+		game.insert(b, big(100), big(0));
+		ZombiePoint p1 = game.arrow("left");
+		ZombiePoint p2 = game.arrow("right");
+		assertTrue(game.zombie(p1.getX(), p1.getY())==a);
+		assertTrue(game.zombie(p2.getX(), p2.getY())==b);
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void testArrowInvalidString() {
+		//covers bad data and structural basis
+		game.insert(a, big(0), big(0));
+		game.insert(b, big(100), big(0));
+		game.arrow("test");
+		fail();
+	}
+	
+	@Test(expected = NullPointerException.class)
+	public void testArrowNullString() {
+		//covers bad data
+		game.insert(a, big(0), big(0));
+		game.insert(b, big(100), big(0));
+		game.arrow(null);
+		fail();
+	}
+	
+	@Test
+	public void testArrowBoundaries() {
+		game.insert(a, big(0), big(0));
+		game.insert(b, big(0), big(1));
+		ZombiePoint p = game.arrow("left");
+		assertTrue(game.zombie(p.getX(), p.getY())==a || game.zombie(p.getX(), p.getY())==b);
+	}
+	
 	public BigInteger big(int i){
 		return new BigInteger(""+i);
 	}

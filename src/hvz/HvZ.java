@@ -55,6 +55,7 @@ public class HvZ {
 	 * kills the zombie whose horizontal position is closest to that of the player, irrespective of height.
 	 */
 	public ZombiePoint javelin(BigInteger playerX){
+		Objects.requireNonNull(playerX);
 		//left<-get the key of a floor function on value (xP)
 		ZombiePoint less = zombies.floorKey(new ZombiePoint(playerX, BigInteger.ZERO));
 		//right<-get the key of a ceiling function on value (xP)
@@ -76,12 +77,15 @@ public class HvZ {
 	 * the zombie that is furthest to the left (or the right, at the player's choosing), irrespective of his height.
 	 */
 	public ZombiePoint arrow(String direction){
+		Objects.requireNonNull(direction);
 		//if direction = left then return furthest left key in tree
-		if(direction.toLowerCase().equals("left"))
+		if(direction.equals("left"))
 			return zombies.firstKey();
 		//else return furthest right key
-		else 
+		else if(direction.equals("right"))
 			return zombies.lastKey();
+		else
+			throw new IllegalArgumentException("String argument for arrow() must either be \"left\" or \"right\"");
 	}
 	/*Bomb(xP, r) returns the (x, y) coordinate of the zombie that would be killed by a bomb of 
 	 * range r launched by a player at coordinate xP.  It returns null if there is no zombie in range.  
