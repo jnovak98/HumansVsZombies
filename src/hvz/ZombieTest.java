@@ -164,6 +164,13 @@ public class ZombieTest {
 	}
 	
 	@Test
+	public void testArrowEmptyBoard() {
+		//covers structural basis 
+		assertTrue("With no zombies in range, should return null",
+				game.arrow("left")==null);
+	}
+	
+	@Test
 	public void testArrowBoundaries() {
 		game.insert(a, big(0), big(0));
 		game.insert(b, big(0), big(1));
@@ -233,6 +240,34 @@ public class ZombieTest {
 				game.zombie(p3.getX(), p3.getY())==a);
 		assertTrue("Should not include a zombie outside of range",
 				game.zombie(p4.getX(), p4.getY())==c);
+	}
+	
+	@Test
+	public void stressTest() {
+		int numberOfZombies = 1000000;
+		int mapSize = 100000;
+		Zombie[] zombies = new Zombie[numberOfZombies];
+		ZombiePoint[] locations = new ZombiePoint[numberOfZombies];
+		for(int i = 0; i < zombies.length; i++){
+			zombies[i] = new Zombie(""+i);
+			BigInteger x,y;
+			do{
+				x = big((int)(Math.random()*mapSize));
+				y = big((int)(Math.random()*mapSize));
+			} while (game.zombie(x, y) != null);
+			locations[i] = new ZombiePoint(x, y);
+			game.insert(zombies[i], x, y);
+			assertTrue("Should find just inserted zombie at the position it was inserted at",
+					game.zombie(x, y)==zombies[i]);
+			game.arrow("left");
+			game.arrow("right");
+			game.javelin(x);
+			game.bomb(x,y);
+			assertTrue("Should be able to delete correct zombie at the position it was inserted at",
+					game.delete(x, y)==zombies[i]);
+		}
+		assertTrue("After deleting all zombies, the weapon methods should return null",
+				game.arrow("left")==null);
 	}
 	
 	public BigInteger big(int i){

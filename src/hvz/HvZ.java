@@ -78,6 +78,8 @@ public class HvZ {
 	 */
 	public ZombiePoint arrow(String direction){
 		Objects.requireNonNull(direction);
+		if(zombies.size()==0)
+			return null;
 		//if direction = left then return furthest left key in tree
 		if(direction.equals("left"))
 			return zombies.firstKey();
